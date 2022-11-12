@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Esewa payment</title>
+</head>
+<body>
+    <form action="https://uat.esewa.com.np/epay/main" method="POST">
+        <input value="{{order.total}}" name="tAmt" type="text">
+        <input value="{{order.total}}" name="amt" type="text">
+        <input value="0" name="txAmt" type="text">
+        <input value="0" name="psc" type="text">
+        <input value="0" name="pdc" type="text">
+        <input value="EPAYTEST" name="scd" type="text">
+        <input value="order_{{order.id}}" name="pid" type="text">
+        <input value="http://127.0.0.1.8000" type="text" name="su">
+        <input value="{{request.build_absolute_uri}}" type="text" name="fu">
+        <input value="Submit" type="submit">
+    </form>
+</body>
+</html>

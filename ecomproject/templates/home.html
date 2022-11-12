@@ -1,0 +1,58 @@
+{% extends 'main.html' %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    <h1 class="text-center">Welcome to our website</h1>
+    <div class="container">
+        <hr>
+        <div class="row mt-3">
+            {% for product in product_list %}
+            <div class="col-md-3 card">
+            <h4><a href="{% url 'ecomapp:product-detail' product.slug %}">{{product.title}}</a></h4>
+                <img src="{{product.image.url}}" alt="" width="200px" class="img-fluid" style="height: 2500;object-fit:cover;">
+                <p class="mt-3">Price: <strike>Rs. {{product.marked_price}}</strike> Rs. {{product.selling_price}}</p>
+                <a href="{% url 'ecomapp:add-to-cart' product.id %}" class="btn btn-primary">Add to Cart</a>
+            </div>
+            {% endfor %}
+        </div>
+       
+    </div>
+    <h2>Hello</h2>
+
+    {#  pagination #}
+    <nav aria-label="...">
+        <ul class="pagination">
+            {% if product_list.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{product_list.previous_page_number}}">Previous</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" href="#" tableindex="-1" aria-disabled="true">Previous</a>
+            </li>
+            {% endif %}
+
+            {% for i in product_list.paginator.page_range %}
+            {% if i == product_list.number %}
+            <li class="page-item active"><a class="page-link">{{i}}</a></li>
+            {% else %}
+            <li class="page-item"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+            {% endif %}
+            {% endfor %}
+
+            {% if product_list.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ product_list.next_page_number }}">Next</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" href="#" tableindex="-1" aria-disabled="true">Next</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+
+
+
+
+{% endblock %}

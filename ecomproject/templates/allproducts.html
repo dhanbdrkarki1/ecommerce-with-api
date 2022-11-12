@@ -1,0 +1,25 @@
+{% extends 'main.html' %}
+{% block title %} Our Products {% endblock %}
+
+{% block content %}
+<div class="container">
+    <h3>All Products</h3>
+    <hr>
+    {% for category in allcategories %}
+    <h4>{{category.title}}</h4>
+    <div class="row">
+        {% for product in category.product_set.all %}
+        <div class="col-md-3">
+            <div class="m-4">
+                <h5><a href="{% url 'ecomapp:product-detail' product.slug %}">{{product.title}}</a></h5>
+                <img src="{{product.image.url}}" alt="" class="img-fluid" style="height: 2500;object-fit:cover;">
+                <p class="mt-3">Price: <strike>Rs. {{product.marked_price}}</strike> Rs. {{product.selling_price}}</p>
+                <a href="{% url 'ecomapp:add-to-cart' product.id %}" class="btn btn-primary">Add to Cart</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% endfor %}
+    </div>
+{% endblock %}
