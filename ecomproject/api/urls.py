@@ -6,7 +6,6 @@ urlpatterns = [
     path('products/<int:pk>/', ProductDetailView.as_view()),
     path('search/', ProductSearchView.as_view(), name="productsearch"),
     path('add-to-cart/<int:pk>/', AddProductToCart.as_view()),
-    # path('add-to-cart-detail/<int:pk>/', AddToCartDetail.as_view()),
     path('my-cart/', MyCartView.as_view()),
     path('manage-cart-items/<int:pk>/', ManageCartProductView.as_view()),
     path('empty-cart/', EmptyCartView.as_view()),
@@ -17,7 +16,6 @@ urlpatterns = [
 
 
     # admin side
-    # path("admin/login/", AdminLoginView.as_view(), name="adminlogin"),
     path("admin/orders/", AdminOrderListView.as_view(), name="adminorderlist"),
     path("admin/orders/<int:pk>/",
          AdminOrderDetailView.as_view(), name="adminorderdetail"),

@@ -382,7 +382,7 @@ class AdminRequiredMixin(object):
         return super().dispatch(request, *args, **kwargs)
 
 
-class AdminLoginView(AdminRequiredMixin, FormView):
+class AdminLoginView(FormView):
     template_name = "adminpages/adminlogin.html"
     form_class = CustomerLoginForm
     success_url = reverse_lazy('ecomapp:adminhome')
