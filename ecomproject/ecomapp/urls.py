@@ -16,6 +16,7 @@ urlpatterns = [
     path("empty-cart/", EmptyCartView.as_view(), name="empty-cart"),
 
     path("checkout/", CheckOutView.as_view(), name="checkout"),
+    path("esewa-verify/", EsewaVerifyView.as_view(), name="esewaverify"),
 
     path("register/", CustomerRegistrationView.as_view(), name="register"),
     path("logout/", CustomerLogoutView.as_view(), name="logout"),

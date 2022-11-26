@@ -17,6 +17,7 @@ from django.core.paginator import Paginator
 from .utils import password_reset_token
 from django.core.mail import send_mail
 from django.conf import settings
+import requests as req
 
 
 class EcomMixin(object):
@@ -39,7 +40,7 @@ class HomeView(EcomMixin, TemplateView):
         allproducts = Product.objects.all().order_by("-id")
 
         # pagination
-        paginator = Paginator(allproducts, 4)
+        paginator = Paginator(allproducts, 8)
         page_number = self.request.GET.get('page')
         product_list = paginator.get_page(page_number)
         context['product_list'] = product_list
@@ -237,12 +238,52 @@ class CheckOutView(EcomMixin, CreateView):
 
             pm = form.cleaned_data['payment_method']
             order = form.save()
-            print("-----before error---")
             if pm == "Esewa":
                 return redirect(reverse("ecomapp:esewarequest") + "?o_id=" + str(order.id))
         else:
             return redirect("ecomapp:home")
         return super().form_valid(form)
+
+# payment view
+class EsewaRequestView(View):
+    def get(self, request, *args, **kwargs):
+        o_id = request.GET.get("o_id")
+        order = Order.objects.get(id=o_id)
+        context = {
+            "order": order
+        }
+        return render(request, 'esewarequest.html', context)
+
+
+class EsewaVerifyView(View):
+    def get(self, request, *args, **kwargs):
+        import xml.etree.ElementTree as ET
+        oid = request.GET.get('oid')
+        amt = request.GET.get('amt')
+        refId = request.GET.get('refId')
+        print(oid, amt,refId)
+        url = "https://uat.esewa.com.np/epay/transrec"
+        d = {
+            'amt':amt,
+            'scd':'EPAYTEST',
+            'rid':refId,
+            'pid':oid,
+        }
+        resp = req.post(url, d)
+        print(resp)
+        root = ET.fromstring(resp.content)
+        print(root)
+        status = root[0].text.strip()
+        print(status)
+        ord_id = oid.split("_")[1]
+        print(ord_id)
+        ord_obj = Order.objects.get(id=ord_id)
+        if status == "Success":
+            ord_obj.payment_completed = True
+            ord_obj.save()
+            return redirect('/')
+        else:
+            return redirect("/esewa-request/?o_id="+ord_id)
 
 
 class CustomerRegistrationView(CreateView):
@@ -341,8 +382,6 @@ class CustomerProfileView(TemplateView):
 class CustomerOrderDetailView(DetailView):
     template_name = 'customerorderdetail.html'
     model = Order
-
-    # context_object_name = "ord_obj" -> does not work here why?
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated and Customer.objects.filter(user=request.user).exists():
@@ -483,14 +522,3 @@ class ForgotPasswordView(FormView):
         )
         return super().form_valid(form)
 
-# payment view
-
-
-class EsewaRequestView(View):
-    def get(self, request, *args, **kwargs):
-        o_id = request.GET.get("o_id")
-        order = Order.objects.get(id=o_id)
-        context = {
-            "order": order
-        }
-        return render(request, 'esewarequest.html', context)

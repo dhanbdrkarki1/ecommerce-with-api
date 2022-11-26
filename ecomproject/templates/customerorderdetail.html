@@ -13,6 +13,8 @@
             <p><span class="font-weight-bold">Ordered On: </span> {{ord_obj.created_at}} {{ord_obj.created_at|timesince}} ago</p>
             <p><span class="font-weight-bold">Customer Information: </span>By {{ord_obj.ordered_by}}, {{ord_obj.mobile}}</p>
             <p><span class="font-weight-bold">Shipping Information: </span> {{ord_obj.shipping_address}} {{ord_obj.email}} </p>
+            <p><span class="font-weight-bold">Payment Information: </span>Using {{ ord_obj.payment_method }} ({% if ord_obj.payment_completed %}Payment Completed{% else %}Not paid{% endif %})</p>
+
             <table class="table">
                 <thead>
                     <tr>
