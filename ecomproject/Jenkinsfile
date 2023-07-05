@@ -3,6 +3,7 @@ pipeline {
         docker {
             image 'python:3.9'
             args '-p 8095:8000'
+        }
     }
     environment {
         CI = 'true'
