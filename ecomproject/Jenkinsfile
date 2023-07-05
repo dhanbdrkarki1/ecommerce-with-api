@@ -11,6 +11,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
+                sh "whoami"
                 sh "pip install --upgrade pip"
                 sh 'pip install -r ./ecomproject/requirements.txt --user --no-cache-dir'
             }
