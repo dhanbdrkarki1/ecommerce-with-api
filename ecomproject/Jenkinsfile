@@ -3,7 +3,6 @@ pipeline {
         docker {
             image 'python:3.9'
             args '-p 8095:8000'
-            user '1000:1000' // Specify the user and group ID of a non-root user
         }
     }
     environment {
@@ -12,7 +11,10 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'pip install -r ./ecomproject/requirements.txt --no-cache-dir --user'
+                sh 'id -u' // Print the current user ID (optional for verification)
+                sh 'id -g' // Print the current group ID (optional for verification)
+                sh 'adduser --disabled-password --gecos "" myuser' // Create a non-root user
+                sh 'su myuser -c "pip install -r ./ecomproject/requirements.txt --no-cache-dir --user"' // Install packages as the non-root user
             }
         }
         stage('Test') {
